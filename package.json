@@ -1,0 +1,24 @@
+{
+  "name": "samurai",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "scripts": {
+    "storybook": "start-storybook",
+    "build": "build-storybook"
+  },
+  "dependencies": {
+    "react": "^16.12.0",
+    "react-dom": "^16.12.0"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.8.3",
+    "@storybook/react": "^5.3.6",
+    "@types/react": "^16.9.17",
+    "awesome-typescript-loader": "^5.2.1",
+    "babel-loader": "^8.0.6",
+    "react-docgen-typescript-loader": "^3.6.0",
+    "typescript": "^3.7.5",
+    "webpack": "^4.41.5"
+  }
+}
