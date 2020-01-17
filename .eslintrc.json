@@ -1,0 +1,25 @@
+{
+  "extends": "zyehex/react",
+  "rules": {
+    "import/no-extraneous-dependencies": [
+      2,
+      {
+        "devDependencies": [
+          "**/*.stories.jsx",
+          "**/*.stories.tsx",
+          "**/*.stories.js",
+          "**/*.stories.ts"
+        ]
+      }
+    ],
+    "react/prop-types": 0
+  },
+  "overrides": [
+    {
+      "files": ["**/*.stories.{js,ts,tsx,jsx}"],
+      "rules": {
+        "import/extensions": 0
+      }
+    }
+  ]
+}
