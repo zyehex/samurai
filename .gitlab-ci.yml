@@ -1,0 +1,36 @@
+image: node:10-slim
+
+stages:
+  - setup
+  - build
+  - deploy
+
+cache:
+  paths:
+    - node_modules/
+
+install:
+  stage: setup
+  script: yarn
+
+build:storybook:
+  stage: build
+  script: yarn build:storybook
+  artifacts:
+    paths:
+      - storybook-static/
+
+test:
+  stage: build
+  script: yarn test
+
+deploy:storybook:
+  image: python:latest
+  stage: deploy
+  dependencies:
+    - build:storybook
+  before_script:
+    - pip install awscli
+  script:
+    - aws s3 rm s3://${AWS_BUCKET_NAME}/ --recursive
+    - aws s3 cp storybook-static s3://${AWS_BUCKET_NAME} --recursive --acl public-read
