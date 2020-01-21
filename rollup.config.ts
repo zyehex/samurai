@@ -1,6 +1,8 @@
 import commonjs from '@rollup/plugin-commonjs';
 import external from 'rollup-plugin-peer-deps-external';
 import pkg from './package.json';
+import postcss from 'rollup-plugin-postcss';
+import autoprefixer from 'autoprefixer';
 import resolve from '@rollup/plugin-node-resolve';
 import typescript from 'rollup-plugin-typescript2';
 
@@ -40,6 +42,14 @@ export default {
         ],
         'node_modules/react-dom/index.js': ['render']
       }
+    }),
+    postcss({
+      modules: {
+        generateScopedName: '[hash:base64:12]'
+      },
+      extract: false,
+      use: ['sass'],
+      plugins: [autoprefixer]
     })
   ]
 };

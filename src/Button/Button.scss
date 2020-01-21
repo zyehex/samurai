@@ -1,0 +1,21 @@
+$bg: #eee;
+
+.button {
+  background-color: $bg;
+  outline: none;
+  border: none;
+  font-size: 1rem;
+  padding: 1rem;
+  border-radius: 1rem;
+  transition: background-color 0.2s ease;
+  cursor: pointer;
+
+  &:hover {
+    background-color: darken($color: $bg, $amount: 10%);
+  }
+
+  &:active,
+  &:focus {
+    background-color: darken($color: $bg, $amount: 15%);
+  }
+}

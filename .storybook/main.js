@@ -11,15 +11,30 @@ module.exports = {
 
   webpackFinal: config => {
     config.module.rules.push({
-      test: /\.tsx?$/,
+      test: /\.scss$/,
       use: [
+        'style-loader',
         {
-          loader: require.resolve('awesome-typescript-loader')
+          loader: require.resolve('css-loader'),
+          options: {
+            modules: {
+              localIdentName: '[name]__[local]___[hash:base64:6]'
+            }
+          }
         },
         {
-          loader: require.resolve('react-docgen-typescript-loader')
-        }
+          loader: require.resolve('postcss-loader'),
+          options: {
+            plugins: [require('autoprefixer')]
+          }
+        },
+        'sass-loader'
       ]
+    });
+
+    config.module.rules.push({
+      test: /\.tsx?$/,
+      use: ['awesome-typescript-loader', 'react-docgen-typescript-loader']
     });
 
     config.resolve.extensions.push('.ts', '.tsx');

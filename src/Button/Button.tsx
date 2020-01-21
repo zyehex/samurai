@@ -1,5 +1,6 @@
 import React, { FC } from 'react';
 import PropTypes from 'prop-types';
+import styles from './Button.scss';
 
 export interface ButtonProps {
   /** Text to display within the button */
@@ -9,7 +10,7 @@ export interface ButtonProps {
 }
 
 const Button: FC<ButtonProps> = ({ name, onClick }) => (
-  <button onClick={onClick} type="button">
+  <button onClick={onClick} type="button" className={styles.button}>
     {name}
   </button>
 );
