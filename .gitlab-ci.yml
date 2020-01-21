@@ -1,13 +1,25 @@
-image: node:10-slim
+image: node:10
 
 stages:
   - setup
   - build
   - deploy
+  - cleanup
 
 cache:
   paths:
     - node_modules/
+
+alert:pre:
+  stage: setup
+  before_script:
+    - apt-get update
+    - apt-get install -y curl
+  script:
+    - 'curl -X POST -H "Content-type: application/json" --data "{\"text\":\"Deploying ${CI_PROJECT_NAME} for commit \`${CI_COMMIT_BRANCH}:${CI_COMMIT_SHORT_SHA}\`\n${CI_PIPELINE_URL}\"}" ${ALERT_WEBHOOK}'
+  cache: {}
+  only:
+    - master
 
 install:
   stage: setup
@@ -19,13 +31,15 @@ build:storybook:
   artifacts:
     paths:
       - storybook-static/
+  only:
+    - master
 
-test:
+test:pre:
   stage: build
   script: yarn test
 
 deploy:storybook:
-  image: python:latest
+  image: python:alpine
   stage: deploy
   dependencies:
     - build:storybook
@@ -34,3 +48,29 @@ deploy:storybook:
   script:
     - aws s3 rm s3://${AWS_BUCKET_NAME}/ --recursive
     - aws s3 cp storybook-static s3://${AWS_BUCKET_NAME} --recursive --acl public-read
+  cache: {}
+  only:
+    - master
+
+alert:post:
+  stage: cleanup
+  before_script:
+    - apt-get update
+    - apt-get install -y curl
+  script:
+    - 'curl -X POST -H "Content-type: application/json" --data "{\"text\":\"${CI_PROJECT_NAME} successfully deployed\"}" ${ALERT_WEBHOOK}'
+  cache: {}
+  only:
+    - master
+
+alert:error:
+  stage: cleanup
+  before_script:
+    - apt-get update
+    - apt-get install -y curl
+  script:
+    - 'curl -X POST -H "Content-type: application/json" --data "{\"text\":\"<!channel> ${CI_PROJECT_NAME} deployment failed for ${CI_PIPELINE_ID}\n${CI_PIPELINE_URL}\"}" ${ALERT_WEBHOOK}'
+  when: on_failure
+  cache: {}
+  only:
+    - master
