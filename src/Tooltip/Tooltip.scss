@@ -1,0 +1,75 @@
+@import url('https://rsms.me/inter/inter.css');
+
+.wrapper {
+  display: inline-block;
+  position: relative;
+}
+
+.tooltip {
+  position: absolute;
+  background-color: #666;
+  color: #fff;
+  font-size: 0.75rem;
+  white-space: nowrap;
+  word-wrap: none;
+  padding: 0.3125rem 0.5rem;
+  border-radius: 2px;
+  font-family: 'Inter', 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande',
+    'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+
+  &.top {
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    margin-bottom: 0.4rem;
+  }
+
+  &.left {
+    right: 100%;
+    top: 50%;
+    transform: translateY(-50%);
+    margin-right: 0.4rem;
+  }
+
+  &.bottom {
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    margin-top: 0.4rem;
+  }
+
+  &.right {
+    left: 100%;
+    top: 50%;
+    transform: translateY(-50%);
+    margin-left: 0.4rem;
+  }
+
+  &.top-left {
+    bottom: 100%;
+    right: 100%;
+    margin-bottom: 0.4rem;
+    margin-right: 0.4rem;
+  }
+
+  &.top-right {
+    bottom: 100%;
+    left: 100%;
+    margin-bottom: 0.4rem;
+    margin-left: 0.4rem;
+  }
+
+  &.bottom-left {
+    top: 100%;
+    right: 100%;
+    margin-top: 0.4rem;
+    margin-right: 0.4rem;
+  }
+
+  &.bottom-right {
+    top: 100%;
+    left: 100%;
+    margin-top: 0.4rem;
+    margin-left: 0.4rem;
+  }
+}
