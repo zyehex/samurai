@@ -5,10 +5,8 @@
       2,
       {
         "devDependencies": [
-          "**/*.stories.jsx",
-          "**/*.stories.tsx",
-          "**/*.stories.js",
-          "**/*.stories.ts",
+          "**/*.stories.{ts,tsx,js,jsx}",
+          "**/*.test.{ts,tsx,js,jsx}",
           "rollup.config.ts"
         ]
       }
@@ -16,9 +14,15 @@
   },
   "overrides": [
     {
-      "files": ["**/*.stories.{js,ts,tsx,jsx}"],
+      "files": ["**/*.stories.{ts,tsx,js,jsx}"],
       "rules": {
         "import/extensions": 0
+      }
+    },
+    {
+      "files": ["**/*.test.{ts,tsx,js,jsx}"],
+      "env": {
+        "jest": true
       }
     }
   ]

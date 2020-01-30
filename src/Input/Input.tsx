@@ -16,6 +16,8 @@ export interface InputProps {
   onBlur?: (e: React.FocusEvent<HTMLInputElement>) => void;
   /** Focus handler */
   onFocus?: (e: React.FocusEvent<HTMLInputElement>) => void;
+  /** If the input is readonly and can't be changed by the user */
+  readOnly?: boolean;
   /** Value for controlled input */
   value?: string;
 }
@@ -27,6 +29,7 @@ const Input: FC<InputProps> = ({
   onBlur,
   onChange,
   onFocus,
+  readOnly,
   value
 }) => {
   const [labelActive, setLabelActive] = useState(false);
@@ -44,16 +47,16 @@ const Input: FC<InputProps> = ({
   function blurHandler(e: React.FocusEvent<HTMLInputElement>): void {
     setLabelActive(!!e.currentTarget.value);
 
-    if (typeof onFocus === 'function') {
-      onFocus(e);
+    if (typeof onBlur === 'function') {
+      onBlur(e);
     }
   }
 
   function focusHandler(e: React.FocusEvent<HTMLInputElement>): void {
     setLabelActive(true);
 
-    if (typeof onBlur === 'function') {
-      onBlur(e);
+    if (typeof onFocus === 'function') {
+      onFocus(e);
     }
   }
 
@@ -76,6 +79,7 @@ const Input: FC<InputProps> = ({
         onBlur={blurHandler}
         onChange={onChange}
         onFocus={focusHandler}
+        readOnly={readOnly}
         value={value}
       />
     </label>
@@ -89,6 +93,7 @@ Input.propTypes = {
   onBlur: PropTypes.func,
   onChange: PropTypes.func,
   onFocus: PropTypes.func,
+  readOnly: PropTypes.bool,
   value: PropTypes.string
 };
 
