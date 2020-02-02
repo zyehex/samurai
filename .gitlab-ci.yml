@@ -1,7 +1,7 @@
-image: node:10
+image: registry.gitlab.com/zyehex/port/node
 
 stages:
-  - setup
+  - test
   - build
   - deploy
   - cleanup
@@ -10,20 +10,22 @@ cache:
   paths:
     - node_modules/
 
-alert:pre:
-  stage: setup
+test:
+  stage: test
   before_script:
-    - apt-get update
-    - apt-get install -y curl
+    - 'curl -X POST -H "Content-type: application/json" --data "{\"text\":\"Deploying ${CI_PROJECT_NAME} ${CI_COMMIT_TAG} \n${CI_PIPELINE_URL}\"}" ${ALERT_WEBHOOK}'
+    - yarn
   script:
-    - 'curl -X POST -H "Content-type: application/json" --data "{\"text\":\"Deploying ${CI_PROJECT_NAME} for commit \`${CI_COMMIT_BRANCH}:${CI_COMMIT_SHORT_SHA}\`\n${CI_PIPELINE_URL}\"}" ${ALERT_WEBHOOK}'
-  cache: {}
-  only:
-    - master
+    - yarn test
 
-install:
-  stage: setup
-  script: yarn
+build:package:
+  stage: build
+  script: yarn build
+  artifacts:
+    paths:
+      - dist/
+  only:
+    - tags
 
 build:storybook:
   stage: build
@@ -32,11 +34,15 @@ build:storybook:
     paths:
       - storybook-static/
   only:
-    - master
+    - tags
 
-test:pre:
-  stage: build
-  script: yarn test
+deploy:package:
+  stage: deploy
+  dependencies:
+    - build:package
+  script:
+    - echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" >> .npmrc
+    - npm publish
 
 deploy:storybook:
   image: python:alpine
@@ -48,29 +54,26 @@ deploy:storybook:
   script:
     - aws s3 rm s3://${AWS_BUCKET_NAME}/ --recursive
     - aws s3 cp storybook-static s3://${AWS_BUCKET_NAME} --recursive --acl public-read
+  environment:
+    name: production
+    url: http://samurai.zyehex.com
   cache: {}
   only:
-    - master
+    - tags
 
 alert:post:
   stage: cleanup
-  before_script:
-    - apt-get update
-    - apt-get install -y curl
   script:
     - 'curl -X POST -H "Content-type: application/json" --data "{\"text\":\"${CI_PROJECT_NAME} successfully deployed\"}" ${ALERT_WEBHOOK}'
   cache: {}
   only:
-    - master
+    - tags
 
 alert:error:
   stage: cleanup
-  before_script:
-    - apt-get update
-    - apt-get install -y curl
   script:
     - 'curl -X POST -H "Content-type: application/json" --data "{\"text\":\"<!channel> ${CI_PROJECT_NAME} deployment failed for ${CI_PIPELINE_ID}\n${CI_PIPELINE_URL}\"}" ${ALERT_WEBHOOK}'
   when: on_failure
   cache: {}
   only:
-    - master
+    - tags
