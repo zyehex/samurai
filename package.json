@@ -58,7 +58,7 @@
     "husky": "^4.0.10",
     "identity-obj-proxy": "^3.0.0",
     "jest": "^25.1.0",
-    "node-sass": "^4.13.1",
+    "node-sass": "^7.0.0",
     "postcss-loader": "^3.0.0",
     "react-docgen-typescript-loader": "^3.6.0",
     "react": "^16.12.0",
